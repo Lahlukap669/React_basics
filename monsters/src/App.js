@@ -1,6 +1,8 @@
 import logo from './logo.svg';
 import './App.css';
 import { Component } from 'react';
+import CardList  from './components/card-list/card-list.component';
+import SearchBox from './components/search-box/search-box.component';
 
 class App extends Component {
   constructor() {
@@ -18,27 +20,23 @@ class App extends Component {
     }));
   }
 
+  onSearchChange = (event) => {
+    const searchField = event.target.value.toLocaleLowerCase();
+    this.setState(() => {
+      return { searchField };
+    });}
+
+
   render () {
+    const { monsters, searchField} = this.state;
+    const { onSearchChange } = this;
     const filterMonsters = this.state.monsters.filter(monster => {
       return monster.name.toLowerCase().includes(this.state.searchField);
     });
     return (
       <div className="App">
-        <input className='search-box' type='search' placeholder='search monsters' onChange={(event) => {
-          const searchField = event.target.value.toLocaleLowerCase();
-          this.setState(() => {
-            return { searchField };
-          });
-        }} />
-        {
-          filterMonsters.map(monster => {
-            return(
-              <div key={monster.id}>
-                <h1>{monster.name}</h1>
-              </div>
-            );
-          })
-        }
+        <SearchBox onChangeHandler = {onSearchChange} placeholder = 'Search monsters' className = 'monsters-search-box'/>
+        <CardList monsters = {filterMonsters} />        
       </div>
     );
   }
